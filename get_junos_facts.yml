@@ -31,3 +31,15 @@
 
     - name: Print line in configurations
       debug: var=cmd_output.config_lines
+
+    - name: Get junos device information
+      # juniper_junos_facts:
+      junos_facts:
+        gather_subset: config
+        config_format: text
+      register: result
+    
+    - debug: var=result
+
+    - name: Save configuration to file in local directory
+      copy: content="{{ result.ansible_facts.ansible_net_config }}" dest=./{{ inventory_hostname }}.save.conf
