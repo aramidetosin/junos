@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: no
+
+  vars:
+    - auth_key: "{{lookup('file', '{{ key_file }}')}}"    
+
+  tasks:
+    - name: Install SSH key on remote host
+      junos_config:
+        lines:
+          - set system login user admin authentication ssh-rsa "{{ auth_key }}"
+          - set system login user admin class super-user

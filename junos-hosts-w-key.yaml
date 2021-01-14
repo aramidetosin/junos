@@ -1,0 +1,24 @@
+# [junos]
+# 192.168.1.211
+# 192.168.1.212
+# 192.168.1.213
+
+# [all:vars]
+# ansible_connection: netconf
+# ansible_network_os: junos
+# ansible_user: admin
+# ansible_ssh_private_key_file: juniper-hosts.key
+# ansible_python_interpreter: /usr/bin/python3
+
+all:
+    hosts:
+      "192.168.1.211":
+      "192.168.1.212":
+      "192.168.1.213":
+    vars:
+      # ansible_connection: netconf
+      ansible_connection: local
+      ansible_network_os: junos
+      ansible_user: ansible
+      ansible_ssh_private_key_file: juniper-hosts.key
+      ansible_python_interpreter: /usr/bin/python3

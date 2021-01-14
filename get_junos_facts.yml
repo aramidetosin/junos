@@ -1,0 +1,33 @@
+---
+- hosts: all
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  tasks:
+    - name: Get junos device information
+      # juniper_junos_facts:
+      junos_facts:
+      register: junos_facts
+
+    - name: Print Junos facts
+      debug: msg="{{junos_facts.ansible_facts.ansible_net_version}}"
+    
+    - name: Get Junos interfaces information
+      junos_command:
+      # juniper_junos_command:
+        commands:
+          - show interfaces ge-0/0/[01]* terse
+      register: cmd_output
+
+    - name: Print interface information
+      debug: msg="{{cmd_output.stdout_lines}}"
+
+    - name: Retrive the committed configurations
+      juniper_junos_config:
+        retrieve: candidate
+        # filter: interfaces
+      register: cmd_output
+
+    - name: Print line in configurations
+      debug: var=cmd_output.config_lines

@@ -1,0 +1,64 @@
+---
+
+- name: IJAUT lab playbook
+  hosts: all
+  roles:
+    - Juniper.junos
+  connection: local
+  gather_facts: no
+
+  # vars_prompt:
+  # - name: USERNAME
+  #   prompt: User name
+  #   private: no
+  # - name: DEVICE_PASSWORD
+  #   prompt: User password
+  #   private: yes
+
+  tasks:
+  - name: Get Junos device information
+    juniper_junos_facts:
+      # user: "{{USERNAME}}"
+      # passwd: "{{DEVICE_PASSWORD}}"
+    register: junos_facts
+
+  - name: Print Junos facts
+    debug: var=junos_facts.facts.RE0.up_time
+
+  - name: Issue Junos RPC
+    juniper_junos_rpc:
+      rpcs: get-software-information
+    register: rpc_response
+
+  - name: Print the RPC output
+    debug: msg="{{rpc_response["parsed_output"]["software-information"]["junos-version"]}}"
+
+  - name: Issue system Uptime
+    juniper_junos_rpc:
+      rpcs: get-system-uptime-information
+    register: uptime_response
+
+  - name: Print the RPC output
+    debug: msg="{{uptime_response["parsed_output"]["system-uptime-information"]["uptime-information"]["up-time"]}}"
+
+  - name: Read Services configuration
+    juniper_junos_config:
+      retrieve: committed
+      filter: system/services
+    register: get_conf_response
+
+  - name: Print services configuration
+    debug: msg="{{get_conf_response.config_lines}}"
+
+  - name: Configure login banner
+    juniper_junos_config:
+      load: set
+      format: set
+      config_mode: exclusive
+      commit: true
+      lines:
+        - set system login message "\n\nProvisioned by Ansible\n\n"
+    register: set_conf_response
+
+  - name: Print config diff
+    debug: var=set_conf_response.diff_lines

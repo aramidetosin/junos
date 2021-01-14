@@ -1,0 +1,48 @@
+---
+- hosts: all
+  gather_facts: no
+  roles:
+    - Juniper.junos
+
+  tasks:
+    - name: Load the NTP server configurations
+      juniper_junos_config:
+        config_mode: exclusive
+        load: replace
+        lines:
+          - <configuration>
+          -  <system>
+          -      <ntp replace="replace">
+          -          <server>
+          -              <name>{{ntp_server}}</name>
+          -          </server>
+          -      </ntp>
+          -  </system>
+          - </configuration>
+        format: xml
+        commit: true
+      # with_items: "{{ntp_server}}"
+      register: response
+
+    - name: print the NTP config diff
+      debug: var=response.diff_lines
+
+    - name: Load the DNS server configurations
+      juniper_junos_config:
+        config_mode: exclusive
+        load: replace
+        lines:
+          - <configuration>
+          -  <system>
+          -      <name-server>
+          -          <name>{{item}}</name>
+          -      </name-server>
+          -  </system>
+          - </configuration>
+        format: xml
+        commit: true
+      with_items: "{{dns_server}}"
+      register: response
+
+    - name: print config diff
+      debug: var=response.diff_lines

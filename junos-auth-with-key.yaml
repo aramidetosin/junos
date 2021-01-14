@@ -1,0 +1,22 @@
+---
+- hosts: all
+  gather_facts: no
+
+  tasks:
+    - name: Get uptime
+      junos_command:
+        commands:
+            - show system uptime
+      register: uptime
+    
+    - name: Show uptime
+      debug: var=uptime.stdout_lines[0][4]
+
+    - name: Get interface ge-0/0/0 terse
+      junos_command:
+        commands:
+            - show interfaces ge-0/0/0 terse
+      register: interfaces
+    
+    - name: Show interfaces
+      debug: var=interfaces.stdout_lines[0][2]
