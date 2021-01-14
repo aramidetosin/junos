@@ -1,0 +1,18 @@
+- name: Deploy Configuration Template
+  hosts: all
+  gather_facts: no
+  # roles:
+  #   - Juniper.junos
+  
+  tasks:
+    - name: Build interfaces configuration based on template
+      template: src=./interfaces.j2 dest=./{{ inventory_hostname }}.conf
+    - name: Deploy config to device ... please wait
+      junos_config:
+        src: "./{{ inventory_hostname }}.conf"
+        update: merge
+        comment: "Applied by Ansible"
+      register: response
+
+    - name: Print out the output
+      debug: var=response
