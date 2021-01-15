@@ -43,3 +43,4 @@
 
     - name: Save configuration to file in local directory
       copy: content="{{ result.ansible_facts.ansible_net_config }}" dest=./{{ inventory_hostname }}.save.conf
+      

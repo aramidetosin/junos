@@ -5,6 +5,16 @@
     - Juniper.junos
 
   tasks:
+
+    - name: "TASK 0: Validate NTP and DNS server IP addresses"
+      assert:
+        that:
+          - "ntp_server is defined"
+          - "dns_server is defined"
+          - "ntp_server | ipv4 == ntp_server"
+          - "dns_server | ipv4 == dns_server"
+        msg: "Malformed input; please check ntp_server values"
+
     - name: Load the NTP server configurations
       juniper_junos_config:
         config_mode: exclusive
