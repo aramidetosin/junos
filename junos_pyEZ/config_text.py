@@ -6,7 +6,7 @@ from pprint import pprint
 from jnpr.junos.utils.config import Config
 
 if __name__ == "__main__":
-    with connect_ssh_key(host='192.168.1.211') as devices:
+    with connect_ssh_key(host='192.168.1.231') as devices:
         config = Config(devices)
 
         data = """ interfaces {

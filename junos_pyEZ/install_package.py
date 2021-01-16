@@ -12,6 +12,6 @@ def progress_callback(dev, report):
     print(report)
 
 if __name__ == "__main__":
-    with connect_ssh_key(host='192.168.1.226') as dev:
+    with connect_ssh_key(host='192.168.1.231') as dev:
         sw = SW(dev)
         ok = sw.install(package=PACKAGE, no_copy=True, validate=False, progress=progress_callback)

@@ -5,7 +5,7 @@ from pprint import pprint
 from lxml import etree
 
 if __name__ == "__main__":
-    with connect_ssh_key(host='192.168.1.212') as dev:
+    with connect_ssh_key(host='192.168.1.231') as dev:
         print(dev.facts)
 
         config_json = dev.rpc.get_config(filter_xml='interfaces')

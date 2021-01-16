@@ -32,10 +32,14 @@
 
 import requests
 from lxml import etree
+from urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(category=InsecureRequestWarning)
+
 
 USER = "admin"
 PASSWORD = "juniper1"
-DEVICES = ["192.168.1.226"]
+DEVICES = ["192.168.1.231"]
 
 CONFIG_FILTER = """
 <get-config>
@@ -57,7 +61,7 @@ CONFIG_FILTER = """
 if __name__ == '__main__':
     for device in DEVICES:
         # print(f"http://{device}:8080/rpc")
-        response = requests.post(f"http://{device}:8080/rpc", data=CONFIG_FILTER, 
+        response = requests.post(f"https://{device}:8080/rpc", data=CONFIG_FILTER, 
         auth=(USER, PASSWORD),
         verify=False, 
         headers={"Accept": "application/xml", "Content-Type": "application/xml"}

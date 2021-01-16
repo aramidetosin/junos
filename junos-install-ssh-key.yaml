@@ -9,5 +9,10 @@
     - name: Install SSH key on remote host
       junos_config:
         lines:
-          - set system login user admin authentication ssh-rsa "{{ auth_key }}"
-          - set system login user admin class super-user
+          - set system login user {{item}} authentication ssh-rsa "{{ auth_key }}"
+          - set system login user {{item}} class super-user
+      with_items: "{{users}}"
+      register: response
+    
+    - name: print config diff
+      debug: var=response.diff_lines
